@@ -40,7 +40,12 @@ def main():
 
     # Using Glance Service Check and Upload Image
     image=Glance(glance_endpoint,auth_token)
-    image.is_img_available()
+    if image.is_img_available("Ubuntu 14.04 x64 Murano Agent (Ne)"):
+        print "Image available"
+    else:
+        print "Image not available"
+        image.upload_img()
+
 
 
 if __name__ == '__main__':
