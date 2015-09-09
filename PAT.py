@@ -21,12 +21,14 @@ def main():
     parser.add_option('-t', '--tenant',
                       type='string', action='store',metavar='TENANT ID',
                       help='Tenant id of user. (required)')
-
+    parser.add_option('-i', '--image',
+                      type='string', action='store',metavar='TENANT ID',
+                      help='Image to be uploaded or avaiable in openstack eg: Ubuntu 14.04 x64 Murano Agent (New).qcow2 (required)')
 
     opts, args = parser.parse_args()
     const = CONST()
 
-    if not opts.user or not opts.password or not opts.tenant:
+    if not opts.user or not opts.password or not opts.tenant or not opts.image:
         parser.print_help()
         sys.exit(1)
 
@@ -39,12 +41,13 @@ def main():
 
 
     # Using Glance Service Check and Upload Image
-    image=Glance(glance_endpoint,auth_token)
-    if image.is_img_available("Ubuntu 14.04 x64 Murano Agent (Ne)"):
+
+    image_service=Glance(glance_endpoint,auth_token)
+    if image_service.is_img_available(opts.image):
         print "Image available"
     else:
         print "Image not available"
-        image.upload_img()
+        image_service.upload_img()
 
 
 

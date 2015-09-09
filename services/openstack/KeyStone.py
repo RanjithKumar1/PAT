@@ -18,11 +18,12 @@ class KeyStone:
          self.tenantName = tenantname
          self.username = username
          self.password = password
+         self.headers = {'Content-type': 'application/json','Accept':'application/json'}
 
     def get_auth_token(self):
         #Retrieve Auth Token
         data = {"auth": {"tenantName": self.tenantName, "passwordCredentials": {"username": self.username, "password": self.password}}}
-        response = KeyStone.rest.doPost(self.url,data)
+        response = KeyStone.rest.doPost(self.url,data,self.headers)
         auth_token = response["access"]["token"]["id"]
         service_catalog = response["access"]["serviceCatalog"]
         KeyStone.service_catalog = service_catalog
