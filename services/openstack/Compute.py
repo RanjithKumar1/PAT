@@ -54,3 +54,8 @@ class Compute:
         data={}
         response = Compute.rest.doDelete(self.url+"/servers/"+instance_id,data,self.headers)
         print(response)
+
+    def get_instance_creation_status(self,instance_id):
+        data={}
+        response = Compute.rest.doGet(self.url+"/servers/"+instance_id,data,self.headers)
+        print response

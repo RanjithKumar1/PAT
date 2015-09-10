@@ -66,9 +66,11 @@ def main():
         print quota_info
     else:
         print "quota still available"
-        #instance_id = compute.create_instance("eaace4f4-0d55-4df0-bc29-9da2ad8ccce5",flavor)
+        instance_id = compute.create_instance("eaace4f4-0d55-4df0-bc29-9da2ad8ccce5",flavor)
 
-    compute.terminate_instance("554cf19d-a8fa-4186-8107-76e8b6672ea2")
+    compute.get_instance_creation_status(instance_id)
+
+    #compute.terminate_instance("554cf19d-a8fa-4186-8107-76e8b6672ea2")
 
 
 if __name__ == '__main__':
