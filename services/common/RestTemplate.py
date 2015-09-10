@@ -19,5 +19,12 @@ class RestTemplate:
         print(response.text)
         if(response.status_code == 200):
             return response.json()
+        elif(response.status_code == 202):
+            return response.json()
         else:
-            response.raise_for_status()
+            return response.status_code
+
+    def doDelete(self,endpoint,data,headers):
+        data_json = json.dumps(data)
+        response = requests.delete(endpoint, data=data_json, headers=headers)
+        print(response.text)
