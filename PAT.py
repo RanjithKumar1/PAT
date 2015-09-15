@@ -1,6 +1,7 @@
 import sys
 from optparse import OptionParser
 from services.openstack.Glance import Glance
+from services.openstack.Compute import Compute
 
 from services.openstack.KeyStone import KeyStone
 from services.common.CONST import CONST
@@ -35,6 +36,7 @@ def main():
     # Using Key Stone Service retrieve Auth Token and End Point Details
     identity = KeyStone(opts.user,opts.password,opts.tenant)
     auth_token=identity.get_auth_token()
+    tenant_id=identity.get_tenant_id()
     glance_endpoint = identity.get_end_point(const.GLANCE)
     heat_endpoint = identity.get_end_point(const.HEAT)
     nova_endpoint = identity.get_end_point(const.NOVA)
@@ -47,8 +49,28 @@ def main():
         print "Image available"
     else:
         print "Image not available"
-        image_service.upload_img()
+        #image_service.upload_img()
 
+    compute=Compute(nova_endpoint,auth_token,tenant_id)
+
+    flavor = compute.get_flavor_id("d0.quarter")
+    print flavor
+
+    if flavor:
+        print("flavor available")
+    else:
+        print("flavor not available")
+
+    quota_info = compute.get_quota()
+    if bool(quota_info):
+        print quota_info
+    else:
+        print "quota still available"
+        instance_id = compute.create_instance("eaace4f4-0d55-4df0-bc29-9da2ad8ccce5",flavor)
+
+    compute.get_instance_creation_status(instance_id)
+
+    #compute.terminate_instance("554cf19d-a8fa-4186-8107-76e8b6672ea2")
 
 
 if __name__ == '__main__':

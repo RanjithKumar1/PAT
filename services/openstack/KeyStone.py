@@ -3,6 +3,7 @@ from services.common.RestTemplate import RestTemplate
 
 class KeyStone:
 
+    tenant_id = ""
     rest = RestTemplate()
     config = Configuration()
     service_catalog = ""
@@ -25,10 +26,13 @@ class KeyStone:
         data = {"auth": {"tenantName": self.tenantName, "passwordCredentials": {"username": self.username, "password": self.password}}}
         response = KeyStone.rest.doPost(self.url,data,self.headers)
         auth_token = response["access"]["token"]["id"]
+        KeyStone.tenant_id = response["access"]["token"]["tenant"]["id"]
         service_catalog = response["access"]["serviceCatalog"]
         KeyStone.service_catalog = service_catalog
         return auth_token
 
+    def get_tenant_id(self):
+        return KeyStone.tenant_id
 
     def get_end_point(self,serviceName):
        for services in KeyStone.service_catalog:
