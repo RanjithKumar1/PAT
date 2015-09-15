@@ -28,17 +28,6 @@ class Compute:
 
         return response
 
-    def create_instance(self,image_id,flavor_id):
-        data= {
-            "server": {"name": "instance1", "imageRef": image_id, "flavorRef": flavor_id,
-                       "max_count": 1, "min_count": 1}
-            }
-
-        response = Compute.rest.doPost(self.url+"/servers",data,self.headers)
-        print(response)
-        return response["server"]["id"]
-
-
     def get_flavor_id(self, flavor_name):
         data={}
         response = Compute.rest.doGet(self.url+"/flavors",data,self.headers)
@@ -49,6 +38,17 @@ class Compute:
                 return flavor["id"]
             else:
                 return False
+
+    def create_instance(self,image_id,flavor_id):
+        data= {
+            "server": {"name": "instance1", "imageRef": image_id, "flavorRef": flavor_id,
+                       "max_count": 1, "min_count": 1}
+            }
+
+        response = Compute.rest.doPost(self.url+"/servers",data,self.headers)
+        print(response)
+        return response["server"]["id"]
+
 
     def terminate_instance(self,instance_id):
         data={}
