@@ -33,7 +33,9 @@ def main():
         parser.print_help()
         sys.exit(1)
 
+    # ####################################################################
     # Using Key Stone Service retrieve Auth Token and End Point Details
+    ######################################################################
     identity = KeyStone(opts.user,opts.password,opts.tenant)
     auth_token=identity.get_auth_token()
     tenant_id=identity.get_tenant_id()
@@ -41,15 +43,20 @@ def main():
     heat_endpoint = identity.get_end_point(const.HEAT)
     nova_endpoint = identity.get_end_point(const.NOVA)
 
-
+    # ####################################################################
     # Using Glance Service Check and Upload Image
+    # ####################################################################
 
     image_service=Glance(glance_endpoint,auth_token)
     if image_service.is_img_available(opts.image):
         print "Image available"
     else:
         print "Image not available"
-        #image_service.upload_img()
+        sys.exit(1)
+
+    # ####################################################################
+    # Using Compute Service Create Environment
+    # ####################################################################
 
     compute=Compute(nova_endpoint,auth_token,tenant_id)
 
