@@ -1,3 +1,5 @@
+import base64
+
 from services.common.RestTemplate import RestTemplate
 
 
@@ -39,10 +41,10 @@ class Compute:
             else:
                 return False
 
-    def create_instance(self,image_id,flavor_id):
+    def create_instance(self,image_id,flavor_id,user_data):
         data= {
             "server": {"name": "instance1", "imageRef": image_id, "flavorRef": flavor_id,
-                       "max_count": 1, "min_count": 1}
+                       "max_count": 1, "min_count": 1,"user_data":user_data}
             }
 
         response = Compute.rest.doPost(self.url+"/servers",data,self.headers)
@@ -59,3 +61,10 @@ class Compute:
         data={}
         response = Compute.rest.doGet(self.url+"/servers/"+instance_id,data,self.headers)
         print response
+
+
+    def encode_to_base64(self,file_path):
+        with open(file_path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read())
+            return encoded_string
+
