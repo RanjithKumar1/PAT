@@ -1,4 +1,5 @@
 import sys
+import os
 from optparse import OptionParser
 from services.openstack.Glance import Glance
 from services.openstack.Compute import Compute
@@ -73,8 +74,8 @@ def main():
         print quota_info
     else:
         print "quota still available"
-        instance_id = compute.create_instance(image_id,flavor)
-
+        user_data = compute.encode_to_base64("resources/user_data.file")
+        instance_id = compute.create_instance(image_id,flavor,user_data)
     compute.get_instance_creation_status(instance_id)
 
     #compute.terminate_instance("554cf19d-a8fa-4186-8107-76e8b6672ea2")
