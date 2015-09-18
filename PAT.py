@@ -50,6 +50,7 @@ def main():
     image_service=Glance(glance_endpoint,auth_token)
     if image_service.is_img_available(opts.image):
         print "Image available"
+        image_id=image_service.img_id
     else:
         print "Image not available"
         sys.exit(1)
@@ -57,7 +58,6 @@ def main():
     # ####################################################################
     # Using Compute Service Create Environment
     # ####################################################################
-
     compute=Compute(nova_endpoint,auth_token,tenant_id)
 
     flavor = compute.get_flavor_id("d0.quarter")
@@ -73,7 +73,7 @@ def main():
         print quota_info
     else:
         print "quota still available"
-        instance_id = compute.create_instance("eaace4f4-0d55-4df0-bc29-9da2ad8ccce5",flavor)
+        instance_id = compute.create_instance(image_id,flavor)
 
     compute.get_instance_creation_status(instance_id)
 

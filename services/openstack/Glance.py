@@ -5,6 +5,7 @@ from services.common.RestTemplate import RestTemplate
 class Glance:
 
     rest = RestTemplate()
+    img_id=""
     def __init__(self,endpoint,auth_token):
         self.url=endpoint
         self.auth_token=auth_token
@@ -22,6 +23,7 @@ class Glance:
         for image in images:
             if imageName == image["name"]:
                 status = True
+                Glance.img_id=image["id"]
                 return status
             else:
                 status = False
