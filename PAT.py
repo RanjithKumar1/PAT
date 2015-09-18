@@ -132,7 +132,7 @@ def main():
     # Terminate Instance
     # ####################################################################
 
-    #compute.terminate_instance("554cf19d-a8fa-4186-8107-76e8b6672ea2")
+    #compute.terminate_instance(instance_id)
 
 
 if __name__ == '__main__':
