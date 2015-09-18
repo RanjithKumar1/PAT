@@ -63,18 +63,21 @@ def main():
     # ####################################################################
     # Using Neutron Service to get Floating IP
     # ####################################################################
+
     neutron=Neutron(neutron_endpoint,auth_token)
     floating_ip=neutron.getFloatingIps()
     if floating_ip:
         print("floating ip available")
+        print(floating_ip)
     else:
         print("floating ip not available")
-    print(floating_ip)
+        sys.exit(1)
 
 
     # ####################################################################
     # Using Compute Service Create Environment
     # ####################################################################
+
     compute=Compute(nova_endpoint,auth_token,tenant_id)
 
     #Check and Get Flavour Id
@@ -85,19 +88,23 @@ def main():
         print("flavor available")
     else:
         print("flavor not available")
+        sys.exit(1)
 
     #Check Quota and Create ENV
     quota_info = compute.get_quota()
     if bool(quota_info):
         print quota_info
+        sys.exit(1)
     else:
         print "quota still available"
         user_data = compute.encode_to_base64(const.USER_DATA_FILE)
         instance_id = compute.create_instance(image_id,flavor,user_data)
 
+
     # ####################################################################
     # Wait for Instance to Create
     # ####################################################################
+
     status=compute.get_instance_creation_status(instance_id)
     while(status != const.ACTIVE):
         time.sleep(30)
@@ -107,8 +114,9 @@ def main():
     # ####################################################################
     # Assign Floating Ip to Instance
     # ####################################################################
-    compute.assign_floating_ip_to_instance(instance_id,floating_ip)
 
+    compute.assign_floating_ip_to_instance(instance_id,floating_ip)
+    time.sleep(15)
 
     # ####################################################################
     # Execute and Collect Test Results
