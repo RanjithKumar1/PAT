@@ -51,6 +51,10 @@ class Compute:
         print(response)
         return response["server"]["id"]
 
+    def assign_floating_ip_to_instance(self,instance_id,floating_ip):
+        data= {"addFloatingIp": {"address": floating_ip}}
+        response = Compute.rest.doPostWithOutRes(self.url+"/servers/"+instance_id+"/action",data,self.headers)
+        print(response)
 
     def terminate_instance(self,instance_id):
         data={}
@@ -60,7 +64,8 @@ class Compute:
     def get_instance_creation_status(self,instance_id):
         data={}
         response = Compute.rest.doGet(self.url+"/servers/"+instance_id,data,self.headers)
-        print response
+        print response["server"]["status"]
+        return response["server"]["status"]
 
 
     def encode_to_base64(self,file_path):

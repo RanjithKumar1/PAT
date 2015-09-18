@@ -1,8 +1,11 @@
 import sys
 import os
+import time
+
 from optparse import OptionParser
 from services.openstack.Glance import Glance
 from services.openstack.Compute import Compute
+from services.openstack.Neutron import Neutron
 
 from services.openstack.KeyStone import KeyStone
 from services.common.CONST import CONST
@@ -43,6 +46,7 @@ def main():
     glance_endpoint = identity.get_end_point(const.GLANCE)
     heat_endpoint = identity.get_end_point(const.HEAT)
     nova_endpoint = identity.get_end_point(const.NOVA)
+    neutron_endpoint = identity.get_end_point(const.NEUTRON)
 
     # ####################################################################
     # Using Glance Service Check and Upload Image
@@ -57,10 +61,23 @@ def main():
         sys.exit(1)
 
     # ####################################################################
+    # Using Neutron Service to get Floating IP
+    # ####################################################################
+    neutron=Neutron(neutron_endpoint,auth_token)
+    floating_ip=neutron.getFloatingIps()
+    if floating_ip:
+        print("floating ip available")
+    else:
+        print("floating ip not available")
+    print(floating_ip)
+
+
+    # ####################################################################
     # Using Compute Service Create Environment
     # ####################################################################
     compute=Compute(nova_endpoint,auth_token,tenant_id)
 
+    #Check and Get Flavour Id
     flavor = compute.get_flavor_id("d0.quarter")
     print flavor
 
@@ -69,14 +86,38 @@ def main():
     else:
         print("flavor not available")
 
+    #Check Quota and Create ENV
     quota_info = compute.get_quota()
     if bool(quota_info):
         print quota_info
     else:
         print "quota still available"
-        user_data = compute.encode_to_base64("resources/user_data.file")
+        user_data = compute.encode_to_base64(const.USER_DATA_FILE)
         instance_id = compute.create_instance(image_id,flavor,user_data)
-    compute.get_instance_creation_status(instance_id)
+
+    # ####################################################################
+    # Wait for Instance to Create
+    # ####################################################################
+    status=compute.get_instance_creation_status(instance_id)
+    while(status != const.ACTIVE):
+        time.sleep(30)
+        status=compute.get_instance_creation_status(instance_id)
+
+
+    # ####################################################################
+    # Assign Floating Ip to Instance
+    # ####################################################################
+    compute.assign_floating_ip_to_instance(instance_id,floating_ip)
+
+
+    # ####################################################################
+    # Execute and Collect Test Results
+    # ####################################################################
+
+
+    # ####################################################################
+    # Terminate Instance
+    # ####################################################################
 
     #compute.terminate_instance("554cf19d-a8fa-4186-8107-76e8b6672ea2")
 
