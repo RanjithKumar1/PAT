@@ -2,6 +2,7 @@ __author__ = '311855'
 
 import os
 from services.common.RestTemplate import RestTemplate
+from services.common.CONST import CONST
 
 
 class Neutron:
@@ -20,7 +21,7 @@ class Neutron:
         floatingips = response["floatingips"]
         status = True
         for floatingip in floatingips:
-            if "DOWN" == floatingip["status"]:
+            if const.DOWN == floatingip["status"]:
                 return floatingip["floating_ip_address"]
             else:
                 return False

@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import paramiko
 
 from optparse import OptionParser
 from services.openstack.Glance import Glance
@@ -121,8 +122,12 @@ def main():
     # ####################################################################
     # Execute and Collect Test Results
     # ####################################################################
-
-
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(floating_ip, username='ubuntu', key_filename=const.PRIVATE_KEY)
+    stdin, stdout, stderr = ssh.exec_command('hostname')
+    print stdout.readlines()
+    ssh.close()
     # ####################################################################
     # Terminate Instance
     # ####################################################################
