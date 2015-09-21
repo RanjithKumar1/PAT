@@ -117,7 +117,7 @@ def main():
     # ####################################################################
 
     compute.assign_floating_ip_to_instance(instance_id,floating_ip)
-    time.sleep(15)
+    time.sleep(30)
 
     # ####################################################################
     # Execute and Collect Test Results

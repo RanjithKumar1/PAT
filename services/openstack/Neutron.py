@@ -8,6 +8,8 @@ from services.common.CONST import CONST
 class Neutron:
 
     rest = RestTemplate()
+    const = CONST()
+
     def __init__(self,endpoint,auth_token):
         self.url=endpoint
         self.auth_token=auth_token
@@ -21,7 +23,7 @@ class Neutron:
         floatingips = response["floatingips"]
         status = True
         for floatingip in floatingips:
-            if const.DOWN == floatingip["status"]:
+            if self.const.DOWN == floatingip["status"]:
                 return floatingip["floating_ip_address"]
             else:
                 return False

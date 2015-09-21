@@ -38,8 +38,7 @@ class Compute:
         for flavor in flavors:
             if flavor_name == flavor["name"]:
                 return flavor["id"]
-            else:
-                return False
+        return false
 
     def create_instance(self,image_id,flavor_id,user_data):
         data= {

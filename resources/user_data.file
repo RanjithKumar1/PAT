@@ -11,8 +11,12 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
-echo "Starting to install Tomcat"
+echo "Starting to install GUI"
 sudo apt-get update
+sudo apt-get -y -q install --no-install-recommends ubuntu-desktop
+echo "GUI installation completed"
+
+echo "Starting to install Tomcat"
 sudo apt-get -y -q install tomcat7
 sudo iptables -I INPUT 1 -p tcp -m tcp --dport 8080 -j ACCEPT -m comment --comment "by murano, Tomcat"
 echo "Tomcat installation completed"
