@@ -14,6 +14,12 @@
 echo "Starting to install GUI"
 sudo apt-get update
 sudo apt-get -y -q install --no-install-recommends ubuntu-desktop
+sudo apt-get -y -q install firefox xrdp
+sudo apt-get -y -q install unity-lens-applications unity-lens-files
+sudo apt-get -y -q install xfce4
+sudo apt-get -y -q install gnome-icon-theme-full tango-icon-theme
+echo xfce4-session >~/.xsession
+echo -e 'ubuntu\nubuntu\n' | sudo passwd ubuntu
 echo "GUI installation completed"
 
 echo "Starting to install Tomcat"

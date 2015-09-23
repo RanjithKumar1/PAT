@@ -117,7 +117,7 @@ def main():
     # ####################################################################
 
     compute.assign_floating_ip_to_instance(instance_id,floating_ip)
-    time.sleep(30)
+    time.sleep(500)
 
     # ####################################################################
     # Execute and Collect Test Results
@@ -125,9 +125,15 @@ def main():
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(floating_ip, username='ubuntu', key_filename=const.PRIVATE_KEY)
-    stdin, stdout, stderr = ssh.exec_command('hostname')
+    stdin, stdout, stderr = ssh.exec_command('sudo reboot')
     print stdout.readlines()
     ssh.close()
+    time.sleep(180)
+    print("Completed")
+
+
+
+
     # ####################################################################
     # Terminate Instance
     # ####################################################################
