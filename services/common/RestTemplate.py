@@ -30,3 +30,11 @@ class RestTemplate:
             return response
         else:
             response.raise_for_status()
+
+    def doPut(self,endpoint,data,headers):
+        response = requests.put(endpoint, data=data, headers=headers)
+        print(response.text)
+        if(response.status_code >= 200 and  response.status_code <= 210):
+            return response
+        else:
+            response.raise_for_status()

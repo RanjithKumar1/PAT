@@ -30,7 +30,7 @@ class Glance:
 
         return status
 
-    def upload_img(self):
+    def upload_img(self,image):
         #create Image
         data = {"name": "testImg","container_format": "bare","disk_format": "qcow2","min_disk": 0,"min_ram": 0}
         response = Glance.rest.doPost(self.url+"/v2/images",data,self.headers)
@@ -39,9 +39,7 @@ class Glance:
         #upload Image Data
         headers= {'Content-type': 'application/octet-stream','X-Auth-Token':self.auth_token}
         BASE_DIR = os.path.dirname(os.path.dirname(__file__)).replace("services","")
-        IMAGE_DATA=BASE_DIR+"resources"+os.path.sep+"images"+os.path.sep+"cirros-0.3.4-x86_64-disk.img"
-        print(self.auth_token)
-        print(self.url+image_file)
-        print(IMAGE_DATA)
-        response=Glance.rest.doPut(self.url+image_file,IMAGE_DATA,headers)
+        IMAGE_DATA=BASE_DIR+"resources"+os.path.sep+"images"+os.path.sep+image
+        data = open(IMAGE_DATA, 'rb').read()
+        response=Glance.rest.doPut(self.url+image_file,data,headers)
         print("upload_img")

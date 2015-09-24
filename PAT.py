@@ -29,7 +29,8 @@ def main():
                       help='Tenant id of user. (required)')
     parser.add_option('-i', '--image',
                       type='string', action='store',metavar='TENANT ID',
-                      help='Image to be uploaded or avaiable in openstack eg: Ubuntu 14.04 x64 Murano Agent (New).qcow2 (required)')
+                      help='Image to be uploaded or avaiable in openstack eg: Ubuntu 14.04 x64 Murano Agent (New).qcow2 (required)'
+                           '** Note: To upload image should be available in "resource/images/" folder')
 
     opts, args = parser.parse_args()
     const = CONST()
@@ -59,6 +60,7 @@ def main():
         image_id=image_service.img_id
     else:
         print "Image not available"
+        image_service.upload_img(opts.image)
         sys.exit(1)
 
     # ####################################################################
