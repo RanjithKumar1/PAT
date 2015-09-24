@@ -1,11 +1,13 @@
 import base64
+import time
 
 from services.common.RestTemplate import RestTemplate
-
+from services.common.CONST import CONST
 
 class Compute:
 
     rest = RestTemplate()
+    const = CONST()
 
     def __init__(self,endpoint,auth_token,tenant_id):
         self.url=endpoint
@@ -54,6 +56,28 @@ class Compute:
         data= {"addFloatingIp": {"address": floating_ip}}
         response = Compute.rest.doPostWithOutRes(self.url+"/servers/"+instance_id+"/action",data,self.headers)
         print(response)
+
+    def Soft_reboot(self,instance_id):
+        data= {"reboot": {"type": "SOFT"}}
+        response = Compute.rest.doPostWithOutRes(self.url+"/servers/"+instance_id+"/action",data,self.headers)
+        print(response)
+
+    def wait_for_instance_active(self,instance_id):
+        status=self.get_instance_creation_status(instance_id)
+        while(status != self.const.ACTIVE):
+            time.sleep(30)
+            status=self.get_instance_creation_status(instance_id)
+
+    def Soft_reboot(self,instance_id):
+        data= {"reboot": {"type": "SOFT"}}
+        response = Compute.rest.doPostWithOutRes(self.url+"/servers/"+instance_id+"/action",data,self.headers)
+        print(response)
+
+    def get_console_output(self,instance_id):
+        data= {"os-getConsoleOutput": {"length": 50}}
+        response = Compute.rest.doPost(self.url+"/servers/"+instance_id+"/action",data,self.headers)
+        print(response)
+        return response["output"]
 
     def terminate_instance(self,instance_id):
         data={}

@@ -100,38 +100,40 @@ def main():
         print "quota still available"
         user_data = compute.encode_to_base64(const.USER_DATA_FILE)
         instance_id = compute.create_instance(image_id,flavor,user_data)
-
-
-    # ####################################################################
-    # Wait for Instance to Create
-    # ####################################################################
-
-    status=compute.get_instance_creation_status(instance_id)
-    while(status != const.ACTIVE):
-        time.sleep(30)
-        status=compute.get_instance_creation_status(instance_id)
-
+        compute.wait_for_instance_active(instance_id)
 
     # ####################################################################
     # Assign Floating Ip to Instance
     # ####################################################################
 
     compute.assign_floating_ip_to_instance(instance_id,floating_ip)
-    time.sleep(500)
 
+    # ####################################################################
+    # Wait for Environment Set Up
+    # ####################################################################
+    env_not_ready=True
+    while env_not_ready:
+        time.sleep(30)
+        console_output=compute.get_console_output(instance_id)
+        if const.ENV_SETUP_COMPLETE in console_output:
+            env_not_ready=False
+
+    compute.Soft_reboot(instance_id)
+    compute.wait_for_instance_active(instance_id)
+    time.sleep(30)
     # ####################################################################
     # Execute and Collect Test Results
     # ####################################################################
+
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(floating_ip, username='ubuntu', key_filename=const.PRIVATE_KEY)
-    stdin, stdout, stderr = ssh.exec_command('sudo reboot')
+    stdin, stdout, stderr = ssh.exec_command('sudo hostname')
     print stdout.readlines()
     ssh.close()
-    time.sleep(180)
     print("Completed")
 
-
+    compute.get_console_output(instance_id)
 
 
     # ####################################################################

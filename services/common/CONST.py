@@ -12,6 +12,7 @@ class CONST:
         #status
         self.ACTIVE = "ACTIVE"
         self.DOWN = "DOWN"
+        self.ENV_SETUP_COMPLETE="COMPLETED PAT ENVIRONMENT SETUP"
 
         #paths
         self.USER_DATA_FILE = "resources/user_data.file"

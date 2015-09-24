@@ -10,8 +10,12 @@
 #  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #  License for the specific language governing permissions and limitations
 #  under the License.
+echo "######################################################################"
+echo "####################STARTING PAT ENVIRONMENT SETUP####################"
+echo "######################################################################"
 
-echo "Starting to install GUI"
+
+echo "STARTING TO INSTALL GUI"
 sudo apt-get update
 sudo apt-get -y -q install --no-install-recommends ubuntu-desktop
 sudo apt-get -y -q install firefox xrdp
@@ -20,9 +24,13 @@ sudo apt-get -y -q install xfce4
 sudo apt-get -y -q install gnome-icon-theme-full tango-icon-theme
 echo xfce4-session >~/.xsession
 echo -e 'ubuntu\nubuntu\n' | sudo passwd ubuntu
-echo "GUI installation completed"
+echo "GUI INSTALLATION COMPLETED"
 
-echo "Starting to install Tomcat"
+echo "STARTING TO INSTALL TOMCAT"
 sudo apt-get -y -q install tomcat7
 sudo iptables -I INPUT 1 -p tcp -m tcp --dport 8080 -j ACCEPT -m comment --comment "by murano, Tomcat"
-echo "Tomcat installation completed"
+echo "TOMCAT INSTALLATION COMPLETED"
+
+echo "#######################################################################"
+echo "####################COMPLETED PAT ENVIRONMENT SETUP####################"
+echo "#######################################################################"
